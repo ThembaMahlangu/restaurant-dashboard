@@ -1,5 +1,9 @@
+import DashboardTabContent from '@/components/DashboardTabContent';
+import FinancesTabContent from '@/components/FinancesTabContent';
 import Footer from '@/components/Footer';
+import MenuEditorTabContent from '@/components/MenuEditorTabContent';
 import Navbar from '@/components/Navbar';
+import OrdersTabContent from '@/components/OrdersTabContent';
 import Head from 'next/head';
 import { useState } from 'react';
 import {
@@ -8,6 +12,9 @@ import {
   RiMoneyDollarCircleLine,
   RiMenuUnfoldLine,
   RiMenuFoldLine,
+  RiEdit2Line,
+  RiCpuLine,
+  RiSettings2Line,
 } from 'react-icons/ri';
 
 export default function Dashboard() {
@@ -20,6 +27,25 @@ export default function Dashboard() {
 
   const handleToggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
+  };
+
+  const getTabContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <DashboardTabContent />;
+      case 'orders':
+        return <OrdersTabContent />;
+      case 'finances':
+        return <FinancesTabContent />;
+      case 'menu-editor':
+        return <MenuEditorTabContent />;
+      case 'performance':
+        return <PerformanceTabContent />;
+      case 'settings':
+        return <SettingsTabContent />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -62,51 +88,50 @@ export default function Dashboard() {
                   <RiMoneyDollarCircleLine size={20} />
                   <span>Finances</span>
                 </li>
+                <li
+                  className={`flex items-center space-x-4 px-4 py-2 rounded-md cursor-pointer ${
+                    activeTab === 'menu-editor' ? 'bg-red-500 text-white' : 'text-gray-200 hover:bg-gray-700'
+                  }`}
+                  onClick={() => handleTabChange('menu-editor')}
+                >
+                  <RiEdit2Line size={20} />
+                  <span>Menu Editor</span>
+                </li>
+                <li
+                  className={`flex items-center space-x-4 px-4 py-2 rounded-md cursor-pointer ${
+                    activeTab === 'performance' ? 'bg-red-500 text-white' : 'text-gray-200 hover:bg-gray-700'
+                  }`}
+                  onClick={() => handleTabChange('performance')}
+                >
+                  <RiCpuLine size={20} />
+                  <span>Performance</span>
+                </li>
+                <li
+                  className={`flex items-center space-x-4 px-4 py-2 rounded-md cursor-pointer ${
+                    activeTab === 'settings' ? 'bg-red-500 text-white' : 'text-gray-200 hover:bg-gray-700'
+                  }`}
+                  onClick={() => handleTabChange('settings')}
+                >
+                  <RiSettings2Line size={20} />
+                  <span>Settings</span>
+                </li>
               </ul>
             </nav>
           </aside>
         )}
 
         <main className="flex-grow bg-cover bg-center" style={{ backgroundImage: "url('https://b.zmtcdn.com/data/pictures/chains/2/19889342/402a6114e65b6a8f30a70cca1a9b7cca.jpg')" }}>
-          <div className="mx-auto px-4 py-7">
-            <div className="flex items-center justify-between mb-4">
+          <div className="px-4 py-1">
+            <div className="flex items-center mb-0">
               {isSideMenuOpen ? (
                 <RiMenuFoldLine size={24} onClick={handleToggleSideMenu} className="text-white cursor-pointer" />
               ) : (
                 <RiMenuUnfoldLine size={24} onClick={handleToggleSideMenu} className="text-white cursor-pointer" />
               )}
-              <h2 className="text-3xl font-bold text-white">
-                {activeTab === 'dashboard'
-                  ? 'Dashboard'
-                  : activeTab === 'orders'
-                  ? 'Orders'
-                  : activeTab === 'finances'
-                  ? 'Finances'
-                  : ''}
-              </h2>
-              <div />
+              <h1 className="text-white text-3xl font-bold ml-4">{activeTab}</h1>
             </div>
             <div className="flex flex-col items-center space-y-6 py-20">
-              {activeTab === 'dashboard' && (
-                <>
-                  <h2 className="text-3xl font-bold text-white">Dashboard</h2>
-                  <p className="text-white">
-                    Welcome to your Everything Foodie dashboard. Here you can manage your online orders and finances.
-                  </p>
-                </>
-              )}
-              {activeTab === 'orders' && (
-                <>
-                  <h2 className="text-3xl font-bold text-white">Orders</h2>
-                  <p className="text-white">Manage your online orders and keep track of new and completed orders.</p>
-                </>
-              )}
-              {activeTab === 'finances' && (
-                <>
-                  <h2 className="text-3xl font-bold text-white">Finances</h2>
-                  <p className="text-white">Track your financial information and view reports for your business.</p>
-                </>
-              )}
+              {getTabContent()}
             </div>
           </div>
         </main>
